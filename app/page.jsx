@@ -47,6 +47,6 @@ export default function Home() {
         </Link>
       </div>
     </section>
-    // heelo
+    
   );
 }
