@@ -1,13 +1,117 @@
-import Image from 'next/image'
-import React from 'react'
-import {Mic} from 'lucide-react'
+// pages/record.js
+'use client'
+import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
+import { Mic, Disc2,Disc3,Circle,Check, X, AudioLines } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter } from "next/navigation";
 
-export default function page () {
+const Record = () => {
+  const [mediaStream, setMediaStream] = useState(null);
+  const [recorder, setRecorder] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioChunks, setAudioChunks] = useState([]);
+  const [hasPlaybacked, setHasPlaybacked] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function getMicrophone() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        setMediaStream(stream);
+      } catch (err) {
+        console.error('Error accessing microphone:', err);
+      }
+    }
+
+    getMicrophone();
+
+    return () => {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (mediaStream) {
+      const recorderInstance = new MediaRecorder(mediaStream);
+      recorderInstance.ondataavailable = e => {
+        if (e.data.size > 0) {
+          setAudioChunks(prevChunks => [...prevChunks, e.data]);
+        }
+      };
+      setRecorder(recorderInstance);
+    }
+  }, [mediaStream]);
+
+  const handleStartRecording = () => {
+    if (recorder) {
+      recorder.start();
+      setIsRecording(true);
+    }
+  };
+
+  const handleStopRecording = () => {
+    if (recorder) {
+      recorder.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const handlePlayback = () => {
+    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+    const audioUrl = URL.createObjectURL(audioBlob);
+    const audio = new Audio(audioUrl);
+    audio.play();
+    setHasPlaybacked(true);
+  };
+
+  const handleCancel = () => {
+    window.location.reload(); 
+ };
+
+ const handleCheck = (recordedAudioData) => {
+   // Ensure there's recorded audio
+  if (audioChunks.length === 0) {
+    console.error('No audio recorded.');
+    return;
+  }
+  localStorage.setItem('recordedAudio', recordedAudioData);
+  router.push('/Upload');
+
+ }
+
   return (
-    <div className=' container mx-auto flex flex-col items-center justify-center h-screen'>
-        <Image src="" alt="" width="" height="" />
-        <Mic className="w-400 h-400"/>
+    <div className='container mx-auto flex flex-col items-center justify-center h-screen '>
 
+      <Image src="/logo.png" alt="logo" width="130" height="130" className="absolute top-0 left-0 p-3"/>
+      <h1 className='absolute top-[150px]  scroll-m-20 p-8 text-4xl font-semibold tracking-tight first:mt-0'>Record Your Podcast</h1>
+
+      <div className='flex items-center'>
+      <AudioLines className='w-[70px] h-[50px]'/><Mic className=' w-[150px] h-[150px]'/><AudioLines className='w-[70px] h-[50px]'/>
+      </div>
+
+      <div className='p-5 space-x-8 absolute bottom-[150px]'>
+        <Button onClick={handleStartRecording} disabled={isRecording}>
+          Start Recording &nbsp; <Disc2/>
+        </Button>
+        <Button onClick={handleStopRecording} disabled={!isRecording}>
+          Stop Recording &nbsp; <Circle/>
+        </Button>
+        <Button onClick={handlePlayback} disabled={audioChunks.length === 0}>
+          Playback Music &nbsp; <Disc3/>
+        </Button>
+        </div>
+
+        <div className='p-0 space-x-[100px] absolute bottom-[70px]'>
+        <Button onClick={handleCancel}><X/></Button>
+        <Button onClick={handleCheck} disabled={!hasPlaybacked || isRecording}><Check/></Button>
+        </div>
+
+      
     </div>
-  )
-}
+  );
+};
+
+export default Record;

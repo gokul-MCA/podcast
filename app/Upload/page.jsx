@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { Input } from "@/components/ui/input";
 // import { zodResolver } from "@hookform/resolvers/zod"
 // import { useForm } from "react-hook-form"
@@ -20,6 +20,8 @@ import {
   SelectLabel,
   SelectValue,
 } from "@/components/ui/select";
+
+
 
 function formatFileSize(sizeInBytes) {
   const fileSizeInKB = sizeInBytes / 1024;
@@ -53,6 +55,7 @@ export default function PodcastForm() {
   const [heading, setHeading] = useState("");
   const [description, setDescription] = useState("");
   const router = useRouter();
+  const [recordedAudioData, setRecordedAudioData] = useState(null);
 
   const handleAudioChange = (event) => {
     const audioFile = event.target.files[0];
@@ -106,8 +109,32 @@ export default function PodcastForm() {
     // router.push('/success-page');
   };
 
+  useEffect(() => {
+    const audioData = localStorage.getItem('recordedAudio');
+    setRecordedAudioData(audioData);
+    // Do something with the recorded audio data
+  }, []);
+  
   return (
-    <div className="flex w-full">
+    <div className="">
+
+    <h2 className="flex justify-center scroll-m-20 border-b p-5 text-3xl font-semibold tracking-tight first:mt-0">
+      Upload
+    </h2>
+    <div>
+      {recordedAudioData && (
+        <div className="flex items-center justify-center">
+          <audio ref={audioRef} controls>
+            <source src={recordedAudioData} type="audio/*" />
+            Your browser does not support the audio element.
+          </audio>
+          <button onClick={playPauseToggle}>
+            {isPlaying ? <IoPauseOutline /> : <IoPlayOutline />}
+          </button>
+        </div>
+      )}
+    </div>
+     <div className="flex">
 
       <div className="w-full border p-5">
         <form className="w-full space-y-8">
@@ -321,7 +348,7 @@ export default function PodcastForm() {
       </div>
  
 
-
+      </div>
     </div>
   );
 }

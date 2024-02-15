@@ -11,7 +11,7 @@ const Pin = ({ data }) => {
 
   return (
     <Card
-      className="m-2 overflow-hidden relative"
+      className="m-2 overflow-hidden relative cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
