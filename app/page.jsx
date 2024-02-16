@@ -25,7 +25,9 @@ export default function Home() {
 
         <Link
           className="border flex flex-col items-center gap-2 p-2 rounded-xl overflow-hidden hover:shadow-lg hover:scale-105 z-0 hover:z-10 transition-all hover:hue-rotate-15"
-          href="/Upload"
+          href="/Dashboard"
+
+
           target=""
         >
           <Image
