@@ -43,10 +43,10 @@ const SidebarMenu = ({ children }) => {
         </button>
         {expand && (
           <Image
-            src="/kg1.jpg"
+            src="/logo.png"
             alt="logo"
-            width={30}
-            height={20}
+            width={100}
+            height={100}
             priority
             className="ml-2"
           />
