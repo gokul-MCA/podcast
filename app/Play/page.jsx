@@ -1,45 +1,22 @@
-import Nav from '@/components/Nav'
-import Pin from "@/components/Pin";
-import { ScrollArea } from '@/components/ui/scroll-area';
-import React from 'react'
+'use client'
+import Nav from '@/components/Nav';
+import React, { useState } from 'react';
+import Page from '@/components/Page';
 
-export default function page () {
-    const data = [
-        {
-          title: "Podcast Title1",
-          author:"Author Name1",
-        },
-        {
-          title: "Podcast Title",
-          author:"Author Name",
-        },
-        {
-          title: "Podcast Title",
-          author:"Author Name",
-        },
-        {
-          title: "Podcast Title",
-          author:"Author Name",
-        },
-        {
-          title: "Podcast Title",
-          author:"Author Name",
-        },
-        {
-          title: "Podcast Title",
-          author:"Author Name",
-        },]
+export default function page() {
+
+
+  // const handleFavoriteToggle = (index) => {
+  //   const newData = [...data]; // Create a copy of the data array
+  //   newData[index].isFavorite = !newData[index].isFavorite; // Toggle the isFavorite property of the selected item
+  //   setData(newData); // Update the state with the new data
+  // };onFavoriteToggle={() => handleFavoriteToggle(index)} 
+
   return (
     <div>
-      <Nav/>
-      <ScrollArea className="h-[90dvh] w-full">
-      <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ">
-          {data.map((podcast, index) => {
-            return <Pin key={index} data={podcast}/>;
-          })}
-        </div>
-        </ScrollArea>
-
+      <Nav />
+      <Page/>
+      
     </div>
-  )
+  );
 }
