@@ -1,3 +1,4 @@
+import ImageWithPlayIcon from "@/components/ImageWithPlayIcon";
 import { CardContent, CardDescription } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
@@ -39,10 +40,10 @@ const page = () => {
       <div className="p-2">
       <ScrollArea className='h-[420px]'>
         <div className="flex h-[180px] w-[1380px] mx-6 mt-6  border justify-between items-center rounded-md shadow-md p-4">
-          <img
+          <ImageWithPlayIcon
             src="/podcast.jpg"
             alt="No image"
-            width='150'
+            width='600'            //note when we use ImageWithPlayIcon it width need to be bigger.
             height='40'
             className="rounded-md shadow-md"
           />
@@ -69,10 +70,10 @@ const page = () => {
         </div>
 
         <div className="flex h-[180px] w-[1380px] mx-6 mt-6  border justify-between items-center rounded-md shadow-md p-4">
-          <img
+          <ImageWithPlayIcon
             src="/podcast.jpg"
             alt="No image"
-            width='150'
+            width='600'
             height='40'
             className="rounded-md shadow-md"
           />
@@ -99,10 +100,10 @@ const page = () => {
         </div>
 
         <div className="flex h-[180px] w-[1380px] mx-6 mt-6  border justify-between items-center rounded-md shadow-md p-4">
-          <img
+          <ImageWithPlayIcon
             src="/podcast.jpg"
             alt="No image"
-            width='150'
+            width='600'
             height='40'
             className="rounded-md shadow-md"
           />
@@ -129,10 +130,10 @@ const page = () => {
         </div>
 
         <div className="flex h-[180px] w-[1380px] mx-6 mt-6  border justify-between items-center rounded-md shadow-md p-4">
-          <img
+          <ImageWithPlayIcon
             src="/podcast.jpg"
             alt="No image"
-            width='150'
+            width='600'
             height='40'
             className="rounded-md shadow-md"
           />
@@ -159,10 +160,10 @@ const page = () => {
         </div>
 
         <div className="flex h-[180px] w-[1380px] mx-6 mt-6  border justify-between items-center rounded-md shadow-md p-4">
-          <img
+          <ImageWithPlayIcon
             src="/podcast.jpg"
             alt="No image"
-            width='150'
+            width='600'
             height='40'
             className="rounded-md shadow-md"
           />
