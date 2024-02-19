@@ -7,7 +7,7 @@ const Nav = () => {
     <div className="z-10 flex w-full justify-center border-b bg-background p-3 items-center">
 
       <div className="absolute left-3 flex space-x-3">
-        <Image src="/logo.png" alt="kg" width="100" height="100"/>
+        <Image src="/logo.png" alt="logo" width={100} priority height={100}/>
       </div>
 
       <div>

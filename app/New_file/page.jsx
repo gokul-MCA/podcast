@@ -1,7 +1,7 @@
 // pages/record.js
 'use client'
 import { Button } from '@/components/ui/button';
-import { useState, useEffect } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { Mic, Disc2,Disc3,Circle,Check, X, AudioLines } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from "next/navigation";
@@ -61,33 +61,56 @@ const Record = () => {
     }
   };
 
-  const handlePlayback = () => {
-    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-    const audioUrl = URL.createObjectURL(audioBlob);
-    const audio = new Audio(audioUrl);
-    audio.play();
-    setHasPlaybacked(true);
-  };
+  // const handlePlayback = () => {
+  //   const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+  //   const audioUrl = URL.createObjectURL(audioBlob);
+  //   const audio = new Audio(audioUrl);
+  //   audio.play();
+  //   setHasPlaybacked(true);
+  // };
 
   const handleCancel = () => {
     window.location.reload(); 
  };
 
- const handleCheck = (recordedAudioData) => {
-   // Ensure there's recorded audio
+//  const handleCheck = (recordedAudioData) => {
+//    // Ensure there's recorded audio
+//   if (audioChunks.length === 0) {
+//     console.error('No audio recorded.');
+//     return;
+//   }
+//   localStorage.setItem('recordedAudio', recordedAudioData);
+//   router.push('/upload');
+
+//  }
+const handleCheck = () => {
+  // Ensure there's recorded audio
   if (audioChunks.length === 0) {
     console.error('No audio recorded.');
     return;
   }
-  localStorage.setItem('recordedAudio', recordedAudioData);
-  router.push('/Upload');
 
- }
+  // Convert audio chunks to Blob
+  const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+
+  // Convert Blob to base64 string
+  const reader = new FileReader();
+  reader.onload = function () {
+    const audioBase64 = reader.result.split(',')[1];
+
+    // Store the recorded audio in localStorage
+    localStorage.setItem('recordedAudio', audioBase64);
+
+    // Redirect to the upload page
+    router.push('/upload');
+  };
+  reader.readAsDataURL(audioBlob);
+};
 
   return (
     <div className='container mx-auto flex flex-col items-center justify-center h-screen '>
 
-      <Image src="/logo.png" alt="logo" width="130" height="130" className="absolute top-0 left-0 p-3 "/>
+      <Image src="/logo.png" alt="logo" width={130} height={130} priority className="absolute top-0 left-0 p-3 "/>
 
       <Button radius="full" className=" absolute top-10 right-5 mr-10 bg-gradient-to-tr from-pink-500 to-yellow-500 text-white shadow-lg">
       <Link href="/upload" className="text-white">
@@ -110,9 +133,9 @@ const Record = () => {
         <Button onClick={handleStopRecording} disabled={!isRecording} className={`border-4 ${isRecording ? 'border-green-500' : ''}`}>
           Stop Recording &nbsp; <Circle/>
         </Button>
-        <Button onClick={handlePlayback} disabled={audioChunks.length === 0} className={`border-4 ${ isRecording || !isRecording ? 'border-green-500' : ''}`}>
+        {/* <Button onClick={handlePlayback} disabled={audioChunks.length === 0} className={`border-4 ${ isRecording || !isRecording ? 'border-green-500' : ''}`}>
           Playback Music &nbsp; <Disc3/>
-        </Button>
+        </Button> */}
         </div>
 
         <div className='p-0 space-x-[100px] absolute bottom-[100px]'>

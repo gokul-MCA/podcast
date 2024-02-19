@@ -13,6 +13,7 @@ const page = () => {
           alt="No image"
           width="200"
           height="200"
+          priority
           className="rounded-md "
         />
         <div className=" bottom-0 text-white rounded-md">

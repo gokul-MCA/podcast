@@ -1,14 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState , useEffect , useRef } from "react";
 import { Input } from "@/components/ui/input";
 // import { zodResolver } from "@hookform/resolvers/zod"
 // import { useForm } from "react-hook-form"
 // import { z } from "zod"
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useRef } from "react";
-import { IoPlayOutline, IoPauseOutline } from "react-icons/io5";
-import { MdOutlineCancel } from "react-icons/md";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
@@ -23,6 +20,12 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
 import Link from "next/link";
+import { IoPlayOutline, IoPauseOutline, IoArrowBackOutline} from "react-icons/io5";
+import { FaRegFileImage, FaRegFileAudio } from "react-icons/fa";
+import { BsCardHeading} from "react-icons/bs";
+import { GrFormUpload } from "react-icons/gr";
+import { MdCancelPresentation,MdOutlineDescription, MdOutlineCheckBox} from "react-icons/md";
+
 
 function formatFileSize(sizeInBytes) {
   const fileSizeInKB = sizeInBytes / 1024;
@@ -39,19 +42,6 @@ export default function PodcastForm() {
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
-  // Create a ref for the audio element
-  //  play pause
-  const playPauseToggle = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
   const [selectedAudio, setSelectedAudio] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [category, setCategory] = useState("");
@@ -92,6 +82,29 @@ export default function PodcastForm() {
     }
   };
 
+   // Create a ref for the audio element
+  //  play pause
+  // play pause
+const playPauseToggle = () => {
+  const audio = audioRef.current;
+  if (audio.paused) {
+    audio.play();
+    setIsPlaying(true);
+  } else {
+    audio.pause();
+    setIsPlaying(false);
+  }
+};
+
+
+  const imageInputRef = useRef(null)
+  const cancelImage = () => {
+    setSelectedImage(null);
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
+  };
+
   const handleCancel = () => {
     window.location.reload();
   };
@@ -121,6 +134,11 @@ export default function PodcastForm() {
     // Do something with the recorded audio data
   }, []);
 
+  const clearRecordedAudio = () => {
+    setRecordedAudioData(null);
+    localStorage.removeItem("recordedAudio");
+  };
+
   useEffect(() => {
     // Show the alert
     setShowAlert(true);
@@ -136,25 +154,36 @@ export default function PodcastForm() {
 
   return (
     <div className="p-2">
+
+      <div className="relative items-center ">
+      <div className="absolute left-3 flex p-3">
       <Image
         src="/logo.png"
         alt="logo"
-        width="130"
-        height="130"
-        className="absolute top-0 left-0 p-3 "
+        width="100"
+        height="100"
+        priority
       />
-      <h2 className="flex justify-center scroll-m-20 border-b p-5 text-3xl font-semibold tracking-tight first:mt-0">
-        Upload
+      </div>
+
+      <h2 className="flex items-center justify-center scroll-m-20 border-b p-2 text-3xl font-semibold tracking-tight first:mt-0">
+        Upload <GrFormUpload className="w-10 h-10"/>
       </h2>
-      <div className="pl-10 pt-5 flex gap-2">
-      <Button variant='outline' ><Link href='/' target=''>Back</Link></Button>
+      </div>
+      
+     
+
+      <div className="pl-10 pt-3 flex gap-2">
+      <Button variant='outline'>
+        <Link href='/' target='' className='flex items-center gap-1' ><IoArrowBackOutline className="w-4 h-4"/>Back</Link>
+      </Button>
 
       {showAlert && (
         <Alert
           variant="destructive"
           className="w-[300px] h-10 flex justify-center items-center"
         >
-          <AlertDescription>Select Audio File From below</AlertDescription>
+          <AlertDescription className='flex gap-2 items-center'>Select Audio File <FaRegFileAudio /></AlertDescription>
         </Alert>
       )}
       </div>
@@ -173,15 +202,20 @@ export default function PodcastForm() {
       )}
     </div> */}
 
-      <div className="flex space-x-5 px-10 py-5">
+      <div className="flex space-x-5 px-10 py-3">
         <div className="w-full border rounded-md p-5 ">
-          <form className="w-full space-y-8">
+          <form className="w-full space-y-6">
             <h2 className="flex justify-center border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
               Add Music
             </h2>
             {/* heading part */}
-            <div className="grid grid-cols-4 items-center gap-4 ">
-              <Label>Heading</Label>
+            <div className="grid grid-cols-4 items-center gap-1 ">
+
+              <div className="col-span-1 flex gap-2 items-center">
+              <BsCardHeading className="w-4 h-4"/>
+              <Label>Heading </Label>
+              </div>
+
               <Input
                 id="heading"
                 type="text"
@@ -195,14 +229,19 @@ export default function PodcastForm() {
 
             {/* description part */}
             <div className="grid grid-cols-4 items-center gap-4 ">
-              <Label>Description</Label>
+
+              <div className="col-span-1 flex gap-2 items-center">
+              <MdOutlineDescription className="w-4 h-4"/>
+              <Label> Description</Label>
+              </div>
+
               <Textarea
                 id="description"
                 rows="5"
                 cols="5"
                 required
                 placeholder="Enter Podcast Description"
-                className="col-span-3"
+                className="col-span-3 h-10"
                 value={description}
                 onChange={(e) => {
                   // condition to only accept 250 letters
@@ -216,7 +255,11 @@ export default function PodcastForm() {
 
             {/* category part */}
             <div className="grid grid-cols-4 items-center gap-4 ">
-              <Label>Genre</Label>
+
+              <div className="col-span-1 flex gap-2 items-center">
+              <MdOutlineCheckBox className="w-4 h-4"/>
+              <Label> Genre</Label>
+              </div>
 
               <Select required>
                 <SelectTrigger className="col-span-3 w-auto">
@@ -241,22 +284,32 @@ export default function PodcastForm() {
 
             {/* image part  */}
             <div className="grid grid-cols-4 items-center gap-4 ">
+
+              <div className="col-span-1 flex gap-2 items-center">
+              <FaRegFileImage className="w-4 h-4"/>
               <Label> Thumbnail </Label>
+              </div>
+
+              <div className="col-span-3 flex items-center">
               <Input
                 id="imageFile"
                 type="file"
                 placeholder="Select image file"
                 accept="image/*"
                 required
-                className="col-span-3 "
                 onChange={handleImageChange}
+                ref={imageInputRef}
               />
+               <Button type="cancel">
+                <MdCancelPresentation className="w-5 h-5" onClick={cancelImage} />
+              </Button>
+              </div>
+
             </div>
 
             {selectedImage &&
               selectedImage.type &&
               selectedImage.type.startsWith("image/") && (
-                <div>
                   <div className="flex items-center justify-end space-x-20 ">
                     {/* <p>Podcast Image:</p> */}
                     <img
@@ -265,39 +318,54 @@ export default function PodcastForm() {
                       className="inherit border-4  "
                       style={{
                         maxWidth: "100%",
-                        maxHeight: "150px",
+                        maxHeight: "90px",
                         objectFit: "contain",
                       }}
                     />
-                    <p className="pr-20">
-                      {formatFileSize(selectedImage.size)}
-                    </p>
-                  </div>
+                    <p className="pr-20">{formatFileSize(selectedImage.size)}</p>
+                 
                 </div>
               )}
 
             {/* audio part */}
-            <div className="grid grid-cols-5 items-center gap-4 ">
-              <Label id="audioFile" className="col-span-1">
-                Audio File
-              </Label>
-              <Input
+            <div className="grid grid-cols-4 items-center gap-4 ">
+
+              <div className="col-span-1 flex gap-2 items-center">
+              <FaRegFileAudio className="w-4 h-4"/>
+              <Label id="audioFile">Audio File </Label>
+              </div>
+
+               <div className="col-span-3 flex items-center">
+                {/* Custom UI to display recorded audio */}
+          {recordedAudioData ?  (
+            <div>
+              <audio controls>
+                <source src={recordedAudioData} type="audio/*" />
+                Your browser does not support the audio element.
+              </audio>
+              <button onClick={clearRecordedAudio}>Clear</button>
+            </div>
+           ) 
+          : (       
+               <Input
                 id="audioFile"
                 type="file"
                 placeholder="Select audio file"
                 accept=".mp3,.wav,audio/*"
                 required
-                className="col-span-3"
                 onChange={handleAudioChange}
                 ref={audioInputRef}
               />
-              <Button type="cancel" className="col-span-1">
-                <MdOutlineCancel className="w-5 h-5" onClick={cancelAudio} />
+              )}
+
+              <Button type="cancel">
+                <MdCancelPresentation className="w-5 h-5" onClick={cancelAudio} />
               </Button>
+              </div>
+
             </div>
 
             {selectedAudio && (
-              <div>
                 <div className="flex items-center justify-end space-x-10">
                   {/* <p>Podcast Audio:&nbsp;</p> */}
 
@@ -310,21 +378,20 @@ export default function PodcastForm() {
                   </audio>
 
                   <p className="pr-10">{formatFileSize(selectedAudio.size)}</p>
-                </div>
               </div>
             )}
 
             {/* button */}
             <div className="flex justify-between">
-              <Button type="cancel" onClick={handleCancel}>
-                Cancel
+
+              <Button type="cancel" onClick={handleCancel}
+              className='bg-gradient-to-tr from-pink-500 to-yellow-500 text-white gap-1'>Cancel  
+              <MdCancelPresentation className="w-6 h-6" />
               </Button>
-              <Button
-                type="submit"
-                onClick={submitPodcast}
-                className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white"
-              >
-                Upload
+
+              <Button type="submit" onClick={submitPodcast}
+              className="bg-gradient-to-tr from-pink-500 to-yellow-500 text-white">Upload 
+              <GrFormUpload className="w-6 h-6"/>
               </Button>
             </div>
           </form>
@@ -333,8 +400,8 @@ export default function PodcastForm() {
         {/* preview section */}
 
         <div className="w-full border rounded-md p-5">
-          <h2 className="flex justify-center border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            Preview
+          <h2 className="flex items-center justify-center border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+            Preview 
           </h2>
           {selectedAudio &&
             heading &&
@@ -352,28 +419,32 @@ export default function PodcastForm() {
                     onMouseLeave={() => setIsMouseOver(false)}
                     // style={{ position: "relative" }}
                   >
-                    <img
+                    <Image
                       src={URL.createObjectURL(selectedImage)}
                       alt="Podcast Image"
                       className=" border-4 object-contain z-index-0"
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "300px",
+                        objectFit: "contain",
+                      }}
                     />
                     {/* Play button */}
                     {isMouseOver && (
-                      <button
-                        onClick={playPauseToggle}
-                        className=" absolute bottom-0 right-0 btn border rounded-full bg-black w-16 h-16 m-2 flex justify-center items-center z-index-1"
-                      >
+                       <button
+                       onClick={playPauseToggle}
+                       className='absolute bottom-0 right-0 btn border bg-black rounded-full w-16 h-16 m-2 flex justify-center items-center z-0'>
                         {isPlaying ? (
-                          <IoPauseOutline className="w-5 h-5" />
+                          <IoPauseOutline className="w-5 h-5 " />
                         ) : (
-                          <IoPlayOutline className="w-5 h-5" />
+                          <IoPlayOutline className="w-5 h-5 " />
                         )}
                       </button>
                     )}
                   </div>
 
                   {/* audio */}
-                  {isMouseOver && (
+                  
                     <div className="">
                       <audio ref={audioRef} controlsList="nodownload">
                         <source
@@ -383,8 +454,9 @@ export default function PodcastForm() {
                         />
                         Your browser does not support the audio element.
                       </audio>
+                      
                     </div>
-                  )}
+              
 
                 </div>
 
