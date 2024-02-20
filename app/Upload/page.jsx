@@ -17,14 +17,14 @@ import {
   SelectLabel,
   SelectValue,
 } from "@/components/ui/select";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription , AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
 import Link from "next/link";
-import { IoPlayOutline, IoPauseOutline, IoArrowBackOutline} from "react-icons/io5";
+import { IoPlayOutline, IoPauseOutline , IoArrowBackOutline} from "react-icons/io5";
 import { FaRegFileImage, FaRegFileAudio } from "react-icons/fa";
 import { BsCardHeading} from "react-icons/bs";
 import { GrFormUpload } from "react-icons/gr";
-import { MdCancelPresentation,MdOutlineDescription, MdOutlineCheckBox} from "react-icons/md";
+import { MdCancelPresentation , MdOutlineDescription , MdOutlineCheckBox, MdOutlineQueue} from "react-icons/md";
 
 
 function formatFileSize(sizeInBytes) {
@@ -47,6 +47,7 @@ export default function PodcastForm() {
   const [category, setCategory] = useState("");
   const [heading, setHeading] = useState("");
   const [description, setDescription] = useState("");
+  const [episode,setEpisode] = useState("");
   const router = useRouter();
   const [recordedAudioData, setRecordedAudioData] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
@@ -188,7 +189,7 @@ const playPauseToggle = () => {
       )}
       </div>
 
-      {/* <div>
+      <div>
       {recordedAudioData && (
         <div className="flex items-center justify-center">
           <audio ref={audioRef} controls>
@@ -200,13 +201,13 @@ const playPauseToggle = () => {
           </button>
         </div>
       )}
-    </div> */}
+    </div>
 
       <div className="flex space-x-5 px-10 py-3">
         <div className="w-full border rounded-md p-5 ">
           <form className="w-full space-y-6">
             <h2 className="flex justify-center border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-              Add Music
+              Add Podcast
             </h2>
             {/* heading part */}
             <div className="grid grid-cols-4 items-center gap-1 ">
@@ -280,6 +281,25 @@ const playPauseToggle = () => {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+            </div>
+            
+            {/* episode */}
+            <div className="grid grid-cols-4 items-center gap-1 ">
+
+              <div className="col-span-1 flex gap-2 items-center">
+              <MdOutlineQueue className="w-4 h-4"/>
+              <Label>Episodes </Label>
+              </div>
+
+              <Input
+                id="episode"
+                type="text"
+                placeholder="Eg: Episode 1"
+                className="col-span-3"
+                required
+                value={episode}
+                onChange={(e) => setEpisode(e.target.value)}
+              />
             </div>
 
             {/* image part  */}
@@ -423,6 +443,8 @@ const playPauseToggle = () => {
                       src={URL.createObjectURL(selectedImage)}
                       alt="Podcast Image"
                       className=" border-4 object-contain z-index-0"
+                      width={250}
+                      height={250}
                       style={{
                         maxWidth: "100%",
                         maxHeight: "300px",
