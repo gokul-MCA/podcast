@@ -1,3 +1,5 @@
+'use client'
+import React, { useState } from 'react';
 import SidebarMenu, {
   SidebarMenuChannel,
   SidebarMenuItem,
@@ -16,8 +18,10 @@ import {
 
 import {MdOutlineQueue} from "react-icons/md";
 import { HomeIcon } from "lucide-react";
-import { AiOutlineCloudUpload } from "react-icons/ai";
-import { IoIosArrowDown } from "react-icons/io";
+import { AiOutlineCloudUpload , AiOutlinePlusCircle } from "react-icons/ai";
+import { IoIosArrowDown , IoIosArrowForward  } from "react-icons/io";
+import Link from "next/link";
+
 
 const Sidebar = () => {
   return (
@@ -56,18 +60,21 @@ const Sidebar = () => {
       
     
     <DropdownMenu className=''>
-    <DropdownMenuTrigger className="flex items-center pl-3 gap-3"><MdOutlineQueue/> Episode</DropdownMenuTrigger>
-      <DropdownMenuContent>
+    <DropdownMenuTrigger className="flex items-center pl-3 gap-3"><MdOutlineQueue/> Podcasts</DropdownMenuTrigger>
+      <DropdownMenuContent className='ml-2 pl-1'>
       
         <DropdownMenuItem>
 
-      <DropdownMenu>
-      <DropdownMenuTrigger className="w-full flex justify-start items-center gap-2"><IoIosArrowDown className="mt-1"/> Yoga </DropdownMenuTrigger>
-      <DropdownMenuContent className='pl-4'>
+      <DropdownMenu>         
+      <DropdownMenuTrigger className="w-full flex justify-start gap-2"> <IoIosArrowDown className="mt-1" /> Milky Way </DropdownMenuTrigger>             
+      <DropdownMenuContent className='pl-4 absolute left-[65px] '>
         <DropdownMenuItem>Episode-1</DropdownMenuItem>
         <DropdownMenuItem>Episode-2</DropdownMenuItem>
         <DropdownMenuItem>Episode-3</DropdownMenuItem>
         <DropdownMenuItem>Episode-4</DropdownMenuItem>
+        <DropdownMenuItem className=''>
+          <Link href='/upload/episode' target='' className="flex w-full "><AiOutlinePlusCircle className="w-5 h-5"/></Link>
+        </DropdownMenuItem>
      </DropdownMenuContent>
      </DropdownMenu>
 
@@ -77,11 +84,14 @@ const Sidebar = () => {
         <DropdownMenuItem>
 
         <DropdownMenu>
-      <DropdownMenuTrigger className="w-full flex justify-start gap-2"> <IoIosArrowDown className="mt-1" /> Conversation</DropdownMenuTrigger>
-      <DropdownMenuContent className='pl-4'>
+      <DropdownMenuTrigger className="w-full flex justify-start gap-2"> <IoIosArrowDown className="mt-1" /> Sunrise </DropdownMenuTrigger>
+      <DropdownMenuContent className='pl-4 absolute left-[65px]'>
         <DropdownMenuItem>Episode-1</DropdownMenuItem>
         <DropdownMenuItem>Episode-2</DropdownMenuItem>
         <DropdownMenuItem>Episode-3</DropdownMenuItem>
+        <DropdownMenuItem className=''>
+          <Link href='/upload/episode' target='' className="flex w-full "><AiOutlinePlusCircle className="w-5 h-5"/></Link>
+        </DropdownMenuItem>
      </DropdownMenuContent>
      </DropdownMenu>
 
@@ -91,10 +101,13 @@ const Sidebar = () => {
         <DropdownMenuItem>
 
         <DropdownMenu>
-      <DropdownMenuTrigger className="w-full flex justify-start gap-2"> <IoIosArrowDown className="mt-1" />  Storytelling </DropdownMenuTrigger>
-      <DropdownMenuContent className='pl-4'>
+      <DropdownMenuTrigger className="w-full flex justify-start gap-2"> <IoIosArrowDown className="mt-1" />  Freedom </DropdownMenuTrigger>
+      <DropdownMenuContent className='pl-4 absolute left-[65px]'>
         <DropdownMenuItem>Episode-1</DropdownMenuItem>
         <DropdownMenuItem>Episode-2</DropdownMenuItem>
+        <DropdownMenuItem className=''>
+          <Link href='/upload/episode' target='' className="flex w-full "><AiOutlinePlusCircle className="w-5 h-5"/></Link>
+        </DropdownMenuItem>
      </DropdownMenuContent>
      </DropdownMenu>
 
@@ -104,15 +117,22 @@ const Sidebar = () => {
         <DropdownMenuItem>
 
         <DropdownMenu>
-      <DropdownMenuTrigger className="w-full flex justify-start gap-2"> <IoIosArrowDown className="mt-1" /> Motivation </DropdownMenuTrigger>
-      <DropdownMenuContent className='pl-4'>
+      <DropdownMenuTrigger className="w-full flex justify-start gap-2"> <IoIosArrowDown className="mt-1" /> Music </DropdownMenuTrigger>
+      <DropdownMenuContent className='pl-4 absolute left-[65px]'>
         <DropdownMenuItem>Episode-1</DropdownMenuItem>
         <DropdownMenuItem>Episode-2</DropdownMenuItem>
         <DropdownMenuItem>Episode-3</DropdownMenuItem>
         <DropdownMenuItem>Episode-4</DropdownMenuItem>
+        <DropdownMenuItem className=''>
+          <Link href='/upload/episode' target='' className="flex w-full "><AiOutlinePlusCircle className="w-5 h-5"/></Link>
+        </DropdownMenuItem>
      </DropdownMenuContent>
      </DropdownMenu>
 
+        </DropdownMenuItem>
+
+        <DropdownMenuItem className=''>
+          <Link href='/upload' target='' className="flex w-full "><AiOutlinePlusCircle className="w-5 h-5"/></Link>
         </DropdownMenuItem>
 
      </DropdownMenuContent>

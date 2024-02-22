@@ -209,7 +209,7 @@ const playPauseToggle = () => {
         <div className="w-full border rounded-md p-5 ">
           <form className="w-full space-y-6">
             <h2 className="flex justify-center border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-              Add Podcast
+              Add Episode
             </h2>
             {/* heading part */}
             <div className="grid grid-cols-4 items-center gap-1 ">
@@ -276,6 +276,7 @@ const playPauseToggle = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Select</SelectLabel>
+                    <SelectItem value="yoga">Yoga</SelectItem>
                     <SelectItem value="conversation">Conversation</SelectItem>
                     <SelectItem value="storytelling">Storytelling</SelectItem>
                     <SelectItem value="interview">Interview</SelectItem>
@@ -296,11 +297,10 @@ const playPauseToggle = () => {
                 <Input
                     id="episode"
                     type='text'
-                    placeholder="Eg: Episode 1"
+                    placeholder="Eg: Episode 2"
                     className="col-span-3"
                     required
-                    value="Episode 1"
-                    disable
+                    value={episode}
                     onChange={(e) => setEpisode(e.target.value)}
                 />
   
@@ -430,7 +430,8 @@ const playPauseToggle = () => {
           </h2>
           {selectedAudio &&
             heading &&
-            description &&
+            description && 
+            episode &&
             selectedImage &&
             selectedImage.type &&
             selectedImage.type.startsWith("image/") && (
@@ -493,11 +494,17 @@ const playPauseToggle = () => {
                     {heading}
                   </h2>
                 </div>
+                <div className="pb-5">
+                  <p className="break-words tracking-tight hover:tracking-wide">
+                    {episode}
+                  </p>
+                </div>
                 <div className="">
                   <p className="break-words tracking-tight hover:tracking-wide">
                     {description}
                   </p>
                 </div>
+                
               </div>
             )}
         </div>
