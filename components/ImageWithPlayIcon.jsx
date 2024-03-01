@@ -1,13 +1,32 @@
 'use client'
 import Image from 'next/image';
-import { useState } from 'react';
-import { IoPlayOutline } from "react-icons/io5";
+import { useState, useRef } from 'react';
+import { IoPlayOutline, IoPauseOutline } from "react-icons/io5";
+
 
 const ImageWithPlayIcon = ({ src, alt, width, height }) => {
-  const [ishovered, setIsHovered] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
+
+  const playPauseToggle = () => {
+    const audio = audioRef.current;
+    if (audio.paused) {
+      audio.play();
+      setIsPlaying(true);
+    } else {
+      audio.pause();
+      setIsPlaying(false);
+    }
+  };
 
   return (
-    <div className="relative" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+    <div 
+      className="relative" 
+      onMouseEnter={() => setIsHovered(true)} 
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={playPauseToggle}
+    >
       <Image
         src={src}
         alt={alt}
@@ -16,12 +35,24 @@ const ImageWithPlayIcon = ({ src, alt, width, height }) => {
         priority
         className="rounded-md"
       />
-      {ishovered && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <IoPlayOutline className="text-white w-12 h-12" />
-            </div>
-         
-      )}
+      <audio
+        ref={audioRef} // Add ref to access audio element
+        src='/Music/audio_converter_8_1.mp3'
+        className="w-full"
+      />
+        
+      {/* {isHovered && ( // Show play/pause button only when hovered */}
+        <button
+          className='absolute bottom-0 right-0 btn border bg-black rounded-full w-10 h-10 m-2 flex justify-center items-center z-10'
+        >
+          {isPlaying ? (
+            <IoPauseOutline className="w-5 h-5 " />
+          ) : (
+            <IoPlayOutline className="w-5 h-5 " />
+          )}
+          
+        </button> 
+      {/* )} */}
     </div>
   );
 };

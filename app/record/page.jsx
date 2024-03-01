@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import React,{useState} from 'react'
-import { ReactMic } from 'react-mic'
+// import { ReactMic } from 'react-mic'
 import { useRouter } from "next/navigation";
 
 export default function Record () {
@@ -45,7 +45,7 @@ export default function Record () {
     <div>
         <h2>hello Record</h2>
 
-        <ReactMic className='w-48' record={voice} onStop={onStop}/>
+        {/* <ReactMic className='w-48' record={voice} onStop={onStop}/> */}
 
         <div className='border py-4 px-6 mx-auto bg-black text-white'>
            {audioLink? <Button onClick={clearHandle}>Clear</Button>: ''}

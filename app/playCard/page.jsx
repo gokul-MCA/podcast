@@ -1,4 +1,5 @@
 import ImageWithPlayIcon from "@/components/ImageWithPlayIcon";
+import SongPlay from "@/components/Songplay";
 import { CardContent, CardDescription } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
@@ -190,8 +191,11 @@ const page = () => {
         </div>
         
       </ScrollArea>
+      {/* <div className="pb-5">
+      <SongPlay/>
+      </div> */}
       </div>
-
+      
     </section>
   );
 };
