@@ -1,6 +1,8 @@
 "use client";
 import React, { useState , useEffect , useRef } from "react";
 import { Input } from "@/components/ui/input";
+import { Mic, AudioLines } from 'lucide-react';
+import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 // import { zodResolver } from "@hookform/resolvers/zod"
 // import { useForm } from "react-hook-form"
 // import { z } from "zod"
@@ -20,7 +22,7 @@ import {
 import { Alert, AlertDescription , AlertTitle } from "@/components/ui/alert";
 import Image from "next/image";
 import Link from "next/link";
-import { IoPlayOutline, IoPauseOutline , IoArrowBackOutline} from "react-icons/io5";
+import { IoArrowBackOutline} from "react-icons/io5";
 import { FaRegFileImage, FaRegFileAudio } from "react-icons/fa";
 import { BsCardHeading} from "react-icons/bs";
 import { GrFormUpload } from "react-icons/gr";
@@ -39,26 +41,46 @@ function formatFileSize(sizeInBytes) {
 }
 
 export default function PodcastForm() {
-  const audioRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMouseOver, setIsMouseOver] = useState(false);
-  const [selectedAudio, setSelectedAudio] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedAudio, setSelectedAudio] = useState(null);
   const [category, setCategory] = useState("");
   const [heading, setHeading] = useState("");
   const [description, setDescription] = useState("");
   const [episode,setEpisode] = useState("");
   const router = useRouter();
-  const [recordedAudioData, setRecordedAudioData] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
-  
+  const [audioUrl, setAudioUrl] = useState(null); 
+
+//   back button
   const goBack = () => {
     router.back();
   };
-  
-  const handleAudioChange = (event) => {
-    const audioFile = event.target.files[0];
-    setSelectedAudio(audioFile);
+
+  const recorderControls = useAudioRecorder(
+    {
+      noiseSuppression: true,
+      echoCancellation: true,
+    },
+    (err) => console.table(err) // onNotAllowedOrFound
+  );
+
+  const addAudioElement = (blob) => {
+    const url = URL.createObjectURL(blob);
+    setAudioUrl(url);
+    setSelectedAudio(new File([blob], "audio.mp3"));
+    console.log(url)
+    // const audio = document.createElement('audio');
+    // audio.src = url;
+    // audio.controls = true;
+    // document.body.appendChild(audio);
+  };
+
+  const audioInputRef = useRef(null);
+  const cancelAudio = () => {
+    setAudioUrl(null);
+    if (audioInputRef.current) {
+      audioInputRef.current.value = "";
+    }
   };
 
   const handleImageChange = (event) => {
@@ -78,29 +100,6 @@ export default function PodcastForm() {
       }
     };
   };
-
-  const audioInputRef = useRef(null);
-  const cancelAudio = () => {
-    setSelectedAudio(null);
-    if (audioInputRef.current) {
-      audioInputRef.current.value = "";
-    }
-  };
-
-   // Create a ref for the audio element
-  //  play pause
-  // play pause
-const playPauseToggle = () => {
-  const audio = audioRef.current;
-  if (audio.paused) {
-    audio.play();
-    setIsPlaying(true);
-  } else {
-    audio.pause();
-    setIsPlaying(false);
-  }
-};
-
 
   const imageInputRef = useRef(null)
   const cancelImage = () => {
@@ -133,17 +132,7 @@ const playPauseToggle = () => {
     // router.push('/success-page');
   };
 
-  useEffect(() => {
-    const audioData = localStorage.getItem("recordedAudio");
-    setRecordedAudioData(audioData);
-    // Do something with the recorded audio data
-  }, []);
-
-  const clearRecordedAudio = () => {
-    setRecordedAudioData(null);
-    localStorage.removeItem("recordedAudio");
-  };
-
+ 
   useEffect(() => {
     // Show the alert
     setShowAlert(true);
@@ -173,7 +162,7 @@ const playPauseToggle = () => {
       </div>
 
       <h2 className="flex items-center justify-center scroll-m-20 border-b p-2 text-3xl font-semibold tracking-tight first:mt-0">
-        Upload <GrFormUpload className="w-10 h-10"/>
+        Record <Mic className="w-10 h-10"/>
       </h2>
       </div>
       
@@ -187,30 +176,60 @@ const playPauseToggle = () => {
           variant="destructive"
           className="w-[300px] h-10 flex justify-center items-center"
         >
-          <AlertDescription className='flex gap-2 items-center'>Select Audio File <FaRegFileAudio /></AlertDescription>
+          <AlertDescription className='flex gap-2 items-center'>Record Audio File <FaRegFileAudio /></AlertDescription>
         </Alert>
       )}
       </div>
 
-      <div>
-      {recordedAudioData && (
-        <div className="flex items-center justify-center">
-          <audio ref={audioRef} controls>
-            <source src={recordedAudioData} type="audio/*" />
-            Your browser does not support the audio element.
-          </audio>
-          <button onClick={playPauseToggle}>
-            {isPlaying ? <IoPauseOutline /> : <IoPlayOutline />}
-          </button>
-        </div>
-      )}
-    </div>
+      {/* record section */}
 
       <div className="flex space-x-5 px-10 py-3">
-        <div className="w-full border rounded-md p-5 ">
-          <form className="w-full space-y-6">
+        <div className="w-full border rounded-md p-5 space-y-8">
+
+     <h2 className="flex justify-center border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+     Record Audio
+     </h2>     
+      <div className='flex items-center justify-center p-10'>
+      <AudioLines className='w-[50px] h-[30px]'/>
+      <AudioRecorder
+        onRecordingComplete={(blob) => addAudioElement(blob)}
+        recorderControls={recorderControls}
+        // downloadOnSavePress={true}
+        // downloadFileExtension="mp3"
+        showVisualizer={true}
+        />
+      <AudioLines className='w-[50px] h-[30px]'/>
+      </div>
+
+    {/* start and stop button */}
+     <div className=' flex space-x-8 items-center justify-center p-10'>
+      <Button 
+      className="bg-white hover:bg-green-200 text-black font-bold py-2 px-4 rounded"
+      onClick={recorderControls.startRecording}>Start recording</Button>
+      <br />
+      
+      <Button 
+      className="bg-white hover:bg-red-200 text-black font-bold py-2 px-4 rounded"
+      onClick={recorderControls.stopRecording}>Stop recording</Button>
+      <br />
+      </div>
+
+      <div className='p-10'>
+      {audioUrl && (
+        <div className="mb-4">
+          <audio className="mx-auto flex items-center" controls src={audioUrl}></audio>
+        </div>
+      )}
+      </div>
+
+        </div>
+
+        {/* filled section */}
+
+        <div className="w-full border rounded-md p-5">
+        <form className="w-full space-y-6">
             <h2 className="flex justify-center border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-              Add Episode
+              Add Podcast
             </h2>
             {/* heading part */}
             <div className="grid grid-cols-4 items-center gap-1 ">
@@ -277,7 +296,6 @@ const playPauseToggle = () => {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Select</SelectLabel>
-                    <SelectItem value="yoga">Yoga</SelectItem>
                     <SelectItem value="conversation">Conversation</SelectItem>
                     <SelectItem value="storytelling">Storytelling</SelectItem>
                     <SelectItem value="interview">Interview</SelectItem>
@@ -298,10 +316,10 @@ const playPauseToggle = () => {
                 <Input
                     id="episode"
                     type='text'
-                    placeholder="Eg: Episode 2"
+                    placeholder="Episode 1"
                     className="col-span-3"
                     required
-                    value={episode}
+                    // value="Episode 1"
                     onChange={(e) => setEpisode(e.target.value)}
                 />
   
@@ -361,28 +379,14 @@ const playPauseToggle = () => {
               <Label id="audioFile">Audio File </Label>
               </div>
 
-               <div className="col-span-3 flex items-center">
-                {/* Custom UI to display recorded audio */}
-          {recordedAudioData ?  (
-            <div>
-              <audio controls>
-                <source src={recordedAudioData} type="audio/*" />
-                Your browser does not support the audio element.
-              </audio>
-              <button onClick={clearRecordedAudio}>Clear</button>
-            </div>
-           ) 
-          : (       
-               <Input
-                id="audioFile"
-                type="file"
-                placeholder="Select audio file"
-                accept=".mp3,.wav,audio/*"
-                required
-                onChange={handleAudioChange}
-                ref={audioInputRef}
-              />
-              )}
+               <div className="col-span-3 flex items-center">   
+               <audio className="mx-auto w-full" controls src={audioUrl} onChange={addAudioElement}></audio>
+
+               {audioUrl && (
+                <div className="flex items-center w-[100px]">
+                  <p className="p-1 ">{formatFileSize(selectedAudio.size)}</p>
+              </div>
+            )}
 
               <Button type="cancel">
                 <MdCancelPresentation className="w-5 h-5" onClick={cancelAudio} />
@@ -391,26 +395,12 @@ const playPauseToggle = () => {
 
             </div>
 
-            {selectedAudio && (
-                <div className="flex items-center justify-end space-x-10">
-                  {/* <p>Podcast Audio:&nbsp;</p> */}
-
-                  <audio controls controlsList="nodownload">
-                    <source
-                      src={URL.createObjectURL(selectedAudio)}
-                      type={selectedAudio.type}
-                    />
-                    Your browser does not support the audio element.
-                  </audio>
-
-                  <p className="pr-10">{formatFileSize(selectedAudio.size)}</p>
-              </div>
-            )}
+            
 
             {/* button */}
             <div className="flex justify-between">
 
-              <Button type="cancel" onClick={handleCancel}
+              <Button type="button" onClick={handleCancel}
               className='bg-gradient-to-tr from-pink-500 to-yellow-500 text-white gap-1'>Cancel  
               <MdCancelPresentation className="w-6 h-6" />
               </Button>
@@ -421,93 +411,6 @@ const playPauseToggle = () => {
               </Button>
             </div>
           </form>
-        </div>
-
-        {/* preview section */}
-
-        <div className="w-full border rounded-md p-5">
-          <h2 className="flex items-center justify-center border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-            Preview 
-          </h2>
-          {selectedAudio &&
-            heading &&
-            description && 
-            episode &&
-            selectedImage &&
-            selectedImage.type &&
-            selectedImage.type.startsWith("image/") && (
-              <div className="flex flex-col justify-center items-center p-10">
-                {/* embedded audio and image */}
-                <div className="relative">
-                  {/* image */}
-                  <div
-                    className="relative"
-                    onMouseEnter={() => setIsMouseOver(true)}
-                    onMouseLeave={() => setIsMouseOver(false)}
-                    // style={{ position: "relative" }}
-                  >
-                    <Image
-                      src={URL.createObjectURL(selectedImage)}
-                      alt="Podcast Image"
-                      className=" border-4 object-contain z-index-0"
-                      width={250}
-                      height={250}
-                      style={{
-                        maxWidth: "100%",
-                        maxHeight: "300px",
-                        objectFit: "contain",
-                      }}
-                    />
-                    {/* Play button */}
-                    {isMouseOver && (
-                       <button
-                       onClick={playPauseToggle}
-                       className='absolute bottom-0 right-0 btn border bg-black rounded-full w-16 h-16 m-2 flex justify-center items-center z-0'>
-                        {isPlaying ? (
-                          <IoPauseOutline className="w-5 h-5 " />
-                        ) : (
-                          <IoPlayOutline className="w-5 h-5 " />
-                        )}
-                      </button>
-                    )}
-                  </div>
-
-                  {/* audio */}
-                  
-                    <div className="">
-                      <audio ref={audioRef} controlsList="nodownload">
-                        <source
-                          src={URL.createObjectURL(selectedAudio)}
-                          type={selectedAudio.type}
-                          className=""
-                        />
-                        Your browser does not support the audio element.
-                      </audio>
-                      
-                    </div>
-              
-
-                </div>
-
-                {/* heading and description */}
-                <div className="p-5">
-                  <h2 className="flex justify-center border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0">
-                    {heading}
-                  </h2>
-                </div>
-                <div className="pb-5">
-                  <p className="break-words tracking-tight hover:tracking-wide">
-                    {episode}
-                  </p>
-                </div>
-                <div className="">
-                  <p className="break-words tracking-tight hover:tracking-wide">
-                    {description}
-                  </p>
-                </div>
-                
-              </div>
-            )}
         </div>
       </div>
     </div>

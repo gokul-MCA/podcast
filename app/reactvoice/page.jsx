@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { AudioRecorder, useAudioRecorder } from 'react-audio-voice-recorder';
 import { Check, X, AudioLines } from 'lucide-react';
 import { useRouter } from "next/navigation";
+import { HomeIcon } from "lucide-react";
 // import * from './style.css'
 // import styles from './style.module.css';
 
@@ -52,6 +53,9 @@ export default function App() {
         Choose File
        </Link>
     </Button>
+    <Button variant='outline' className='absolute top-14 left-5'>
+        <Link href='/' target='' className='flex items-center gap-1' ><HomeIcon className='w-5 h-5'/>Home</Link>
+      </Button>
 
       <h1 className='absolute top-[100px] bg-gradient-to-tr from-pink-500 to-yellow-500 
       rounded-lg  p-4 text-4xl font-semibold tracking-tight first:mt-0'>

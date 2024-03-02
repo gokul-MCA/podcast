@@ -51,6 +51,11 @@ export default function PodcastForm() {
   const router = useRouter();
   const [recordedAudioData, setRecordedAudioData] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
+ 
+  const goBack = () => {
+    router.back();
+  };
+
   
 
   const handleAudioChange = (event) => {
@@ -177,9 +182,7 @@ const playPauseToggle = () => {
      
 
       <div className="pl-10 pt-3 flex gap-2">
-      <Button variant='outline'>
-        <Link href='/' target='' className='flex items-center gap-1' ><IoArrowBackOutline className="w-4 h-4"/>Back</Link>
-      </Button>
+      <Button variant='outline' onClick={goBack} className ='flex items-center gap-1'> <IoArrowBackOutline className="w-4 h-4"/> Back</Button>
 
       {showAlert && (
         <Alert
@@ -300,7 +303,6 @@ const playPauseToggle = () => {
                     className="col-span-3"
                     required
                     value="Episode 1"
-                    disable
                     onChange={(e) => setEpisode(e.target.value)}
                 />
   

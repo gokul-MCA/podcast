@@ -41,26 +41,18 @@ const Sidebar = () => {
 
       <SidebarMenuSeperator />
       
-      {/* <SidebarMenuItem
-        icon={<MdOutlineLibraryMusic size={20} />}
-        text="Library"
-        link="/"
-        active={true}
-        alert={false}
-      /> */}
-
       {/* upload */}
-      <SidebarMenuItem
+      {/* <SidebarMenuItem
         icon={<AiOutlineCloudUpload size={20} />}
         text="Upload"
         link="/upload"
         active={true}
         alert={false}
-      />
+      /> */}
       
     
     <DropdownMenu className=''>
-    <DropdownMenuTrigger className="flex items-center pl-3 gap-3"><MdOutlineQueue/> Podcasts</DropdownMenuTrigger>
+    <DropdownMenuTrigger className="flex items-center pl-3 pt-3 gap-3"><MdOutlineQueue/> Podcasts</DropdownMenuTrigger>
       <DropdownMenuContent className='ml-2 pl-1'>
       
         <DropdownMenuItem>

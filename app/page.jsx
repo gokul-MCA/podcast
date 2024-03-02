@@ -11,7 +11,7 @@ export default function Home() {
         
         <Link
           className="border flex flex-col items-center gap-2 p-2 rounded-xl overflow-hidden hover:shadow-lg hover:scale-105 z-0 hover:z-10 transition-all hover:hue-rotate-15"
-          href="/new_file"
+          href="/rec"
           target=""
         >
           <Image
@@ -26,7 +26,7 @@ export default function Home() {
 
         <Link
           className="border flex flex-col items-center gap-2 p-2 rounded-xl overflow-hidden hover:shadow-lg hover:scale-105 z-0 hover:z-10 transition-all hover:hue-rotate-15"
-          href="/dashboard"
+          href="/upload"
           target=""
         >
           <Image
@@ -36,16 +36,16 @@ export default function Home() {
             height={250}
             priority
           />
-          <p className=" text-lg">Import Existing Podcast</p>
+          <p className=" text-lg">Upload Existing Podcast</p>
         </Link>
 
         <Link
           className="border flex flex-col items-center gap-2 p-2 rounded-xl overflow-hidden hover:shadow-lg hover:scale-105 z-0 hover:z-10 transition-all hover:hue-rotate-15"
-          href="/play"
+          href="/playlist"
           target=""
         >
           <Image src="/play.jpg" alt="play" width={300} height={250} priority />
-          <p className="tex-lg">Play</p>
+          <p className="tex-lg">Library</p>
         </Link>
       </div>
     </section>
