@@ -1,15 +1,38 @@
+'use client'
 import ImageWithPlayIcon from "@/components/ImageWithPlayIcon";
 import SongPlay from "@/components/Songplay";
 import { CardContent, CardDescription } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Image from "next/image";
 import React from "react";
+import { Button } from "@/components/ui/button";
+import { IoArrowBackOutline} from "react-icons/io5";
+import Link from "next/link";
+import { TwitterIcon, TwitterShareButton, WhatsappIcon, WhatsappShareButton } from "react-share";
 
 const page = () => {
-  return (
+ 
+return (
     <section className=" border m-10">
-
-      <div className=" flex items-center m-8">
+      {/* <head>
+        <meta name="twitter:card" content="summary_large-image"/>
+        <meta name="twitter:site" content="@gokul"/>
+        <meta name="twitter:url" content={`https:www.kgdatasolutions.netlify.com//`}/>
+        <meta name="" content=""/>
+        <meta name="" content=""/>
+      </head> */}
+       <Button variant='outline' className =' m-2'><Link href='/playlist' className="flex items-center gap-1" >
+        <IoArrowBackOutline className="w-4 h-4"/> Back</Link></Button>
+      
+       <TwitterShareButton url={`https://kgdatasolutions.netlify.com`}>
+         <Button><TwitterIcon className="w-5 h-5"/>share on twitter</Button>
+      </TwitterShareButton>
+      {/* <div>
+      <WhatsappShareButton url={`https://localhost:3000`} >
+        <Button><WhatsappIcon className="w-5 h-5"/></Button>
+      </WhatsappShareButton>  
+      </div> */}
+      <div className=" flex items-center m-4">
         <Image
           src="/yogagirl.jpg"
           alt="No image"
